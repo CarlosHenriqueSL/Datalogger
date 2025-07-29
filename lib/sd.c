@@ -389,6 +389,8 @@ void capture_data_and_save()
     UINT bw;
     res = f_write(&file, header, strlen(header), &bw);
     int num_amostras = 0;
+    
+        
     for (int i = 0; i < 128; i++)
     {
         int16_t acc[3], gyro[3], temp;
@@ -421,15 +423,15 @@ void capture_data_and_save()
 
 void run_help()
 {
-    printf("\nComandos disponiveis:\n\n");
-    printf("Digite 'mount' para montar o cartao SD\n");
-    printf("Digite 'unmount' para desmontar o cartao SD\n");
-    printf("Digite 'ls' para listar arquivos\n");
-    printf("Digite 'cat <arquivo>' para mostrar conteudo do arquivo\n");
-    printf("Digite 'getfree' para obter espaco livre no cartao SD\n");
-    printf("Digite 'capture' (implementacao necessaria) para capturar dados e salvar\n");
-    printf("Digite 'format' para formatar o cartao SD\n");
-    printf("Digite 'help' para exibir os comandos disponiveis\n");
+    printf("\nComandos disponíveis:\n\n");
+    printf("Digite 'a' para montar o cartão SD\n");
+    printf("Digite 'b' para desmontar o cartão SD\n");
+    printf("Digite 'c' para listar arquivos\n");
+    printf("Digite 'd' para mostrar conteúdo do arquivo\n");
+    printf("Digite 'e' para obter espaço livre no cartão SD\n");
+    printf("Digite 'f' para capturar dados do ADC e salvar no arquivo\n");
+    printf("Digite 'g' para formatar o cartão SD\n");
+    printf("Digite 'h' para exibir os comandos disponíveis\n");
     printf("\nEscolha o comando:  ");
 }
 

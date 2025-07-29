@@ -80,6 +80,7 @@ int main()
             cRxedChar = getchar_timeout_us(0);
             sleep_ms(1000);
 
+            tocar_buzzer();
             tocar_leds();
             escrever_display();
         }
@@ -98,6 +99,7 @@ int main()
                 cRxedChar = getchar_timeout_us(0);
                 sleep_ms(1000);
 
+                tocar_buzzer();
                 tocar_leds();
                 escrever_display();
             }
@@ -113,6 +115,7 @@ int main()
                 cRxedChar = getchar_timeout_us(0);
                 sleep_ms(1000);
 
+                tocar_buzzer();
                 tocar_leds();
                 escrever_display();
             }
@@ -130,6 +133,7 @@ int main()
             cRxedChar = getchar_timeout_us(0);
             sleep_ms(1000);
 
+            tocar_buzzer();
             tocar_leds();
             escrever_display();
             botao_B_pressionado = false;
@@ -237,13 +241,12 @@ void processar_entrada()
 static void tocar_leds()
 {
     // Erro na leitura do SD, cor roxa.
-    if (erro_SD) 
+    if (erro_SD)
     {
         gpio_put(LED_PIN_GREEN, 0);
         gpio_put(LED_PIN_BLUE, 1);
         gpio_put(LED_PIN_RED, 1);
         sleep_ms(50);
-        erro_SD = false;
     }
     // Caractere digitado
     else if (PICO_ERROR_TIMEOUT != cRxedChar)
@@ -304,35 +307,47 @@ static void tocar_leds()
 // Funcao para acionar o buzzer
 void tocar_buzzer()
 {
-    // Beep continuo caso haja um erro
+    // Caso haja um erro
     if (erro_SD)
     {
-        gpio_put(BUZZER_PIN, 1);
-        sleep_ms(1500);
-        gpio_put(BUZZER_PIN, 0);
+        for (uint32_t i = 0; i < 300; i++)
+        {
+            gpio_put(BUZZER_PIN, 1);
+            sleep_us(1000);
+            gpio_put(BUZZER_PIN, 0);
+            sleep_us(1000);
+        }
     }
     else if (PICO_ERROR_TIMEOUT != cRxedChar)
     {
         switch (cRxedChar)
         {
         case 'a': // Montagem: um beep
-            gpio_put(BUZZER_PIN, 1);
-            sleep_ms(500);
-            gpio_put(BUZZER_PIN, 0);
+            for (uint32_t i = 0; i < 300; i++)
+            {
+                gpio_put(BUZZER_PIN, 1);
+                sleep_us(1000);
+                gpio_put(BUZZER_PIN, 0);
+                sleep_us(1000);
+            }
             break;
         case 'b': // Desmontagem: um beep
-            gpio_put(BUZZER_PIN, 1);
-            sleep_ms(500);
-            gpio_put(BUZZER_PIN, 0);
+            for (uint32_t i = 0; i < 300; i++)
+            {
+                gpio_put(BUZZER_PIN, 1);
+                sleep_us(1000);
+                gpio_put(BUZZER_PIN, 0);
+                sleep_us(1000);
+            }
             break;
-        case 'f': // Captura de dados: dois beeps
-            gpio_put(BUZZER_PIN, 1);
-            sleep_ms(500);
-            gpio_put(BUZZER_PIN, 0);
-            sleep_ms(500);
-            gpio_put(BUZZER_PIN, 1);
-            sleep_ms(500);
-            gpio_put(BUZZER_PIN, 0);
+        case 'f': // Captura de dados
+            for (uint32_t i = 0; i < 300; i++)
+            {
+                gpio_put(BUZZER_PIN, 1);
+                sleep_us(1000);
+                gpio_put(BUZZER_PIN, 0);
+                sleep_us(1000);
+            }
             break;
         }
     }
@@ -347,6 +362,7 @@ void escrever_display()
     if (erro_SD)
     {
         ssd1306_draw_string(&ssd, "ERRO!", 5, 7);
+        erro_SD = false;
     }
     else
     {
@@ -368,7 +384,8 @@ void escrever_display()
             ssd1306_draw_string(&ssd, "arquivo...", 5, 16);
             break;
         case 'f':
-            ssd1306_draw_string(&ssd, "Dados salvos!", 5, 7);
+            ssd1306_draw_string(&ssd, "Fazendo", 5, 7);
+            ssd1306_draw_string(&ssd, "leitura...", 5, 16);
             break;
         case 'g':
             ssd1306_draw_string(&ssd, "Formatando...", 5, 7);
